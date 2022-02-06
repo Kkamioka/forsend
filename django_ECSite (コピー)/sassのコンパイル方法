@@ -1,0 +1,2 @@
+python3 manage.py sass static/scss/custom.scss static/css/custom.css
+

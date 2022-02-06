@@ -1,0 +1,8 @@
+Flask == 1.1.2
+mysql-connector-python == 8.0.23
+sqlalchemy
+flask-sqlalchemy
+flask-migrate
+PyMySQL==1.0.2
+cryptography==36.0.1
+

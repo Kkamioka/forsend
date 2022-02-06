@@ -1,0 +1,29 @@
+version: '3.3'
+    
+services:
+  db:
+    image: flask/mysql:1.0
+    build: ./db
+    container_name: 'FirstAPI_db_BASE'
+    expose: 
+      - "3306"
+    environment:
+      - TZ=Asia/Tokyo
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=my
+      - MYSQL_USER=my
+      - MYSQL_PASSWORD=my
+    volumes:
+      - ../db/database:/var/lib/mysql
+      - ../db/init:/docker-entrypoint-initdb.d
+  web:
+    image: flask/web:1.0
+    build: ./web
+    container_name: 'FirstAPI_web_BASE'
+    ports:
+      - 8000:8000
+    stdin_open: true
+    tty: true
+    volumes:
+      - ../web:/home/user1/dev
+ 

@@ -1,0 +1,7 @@
+django == 3.2
+psycopg2-binary
+stripe==2.65.0
+Pillow==8.4.0
+django-sass==1.1.0
+django-mathfilters==1.0.0
+

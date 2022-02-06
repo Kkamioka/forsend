@@ -1,0 +1,32 @@
+{% extends 'product/base.html' %}
+{% load static %}
+
+{% block title %}
+  @商品一覧@
+{% endblock %}
+
+{% block contents %}
+<!-- <div class="jumbotron top-img"> -->
+<div class="jumbotron top-img">
+  <p class="text-center text-white top-img-text">"Django"</p>
+</div>
+
+<div class="container">
+  <div class="top__title text-center">
+      All Products
+  </div>
+  <div class="row">
+      {% for product in object_list %}
+      <a href="{% url 'show' product.id %}" class="col-lg-4 col-md-6">
+        <div class="card">
+          <img src="{{ product.image.url }}" class="card-img" />
+          <div class="card-body">
+            <p class="card-title">{{ product.name }}</p>
+            <p class="card-text">¥{{ product.price }} </p>
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+  </div>
+</div>
+{% endblock %}

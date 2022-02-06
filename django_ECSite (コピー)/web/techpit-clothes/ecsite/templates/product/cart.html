@@ -1,0 +1,88 @@
+{% extends 'product/base.html' %}
+{% load static %}
+{% load mathfilters %}
+{% load humanize %}
+
+{% block title %}
+  カート一覧
+{% endblock %}
+
+{% block contents %}
+<div class="container">
+    <div class="cart__title">
+        Shopping Cart
+    </div>
+    {% if line_items|length > 0 %}
+    <div class="cart-wrapper">
+        {% for item in  line_items %} 
+        <div class="card mb-3">
+            <div class="row">
+                <img src="{{ item.product_id.image.url }}" alt="{{ item.product_id.name }}" class="product-cart-img"/>
+                <div class="card-body">
+                    <div class="card-product-name col-6">
+                        {{ item.product.name }}
+                    </div>
+                    <div class="card-quantity col-2">
+                        {{ item.quantity }}個
+                    </div>
+                    <div class="card__total-price col-3 text-center">
+                        ￥{{ item.product_id.price | mul:item.quantity | intcomma }}
+                    </div>
+                    <form method="post" action="{% url 'delete' item.id %}">
+                        {% csrf_token %}
+                        <div class="card__btn-trash col-1">
+                            <input type="hidden" name="id" value="{{ item.id }}"/>
+                            <button type="submit" class="fas fa-trash-alt btn"></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="cart__sub-total">
+        小計：￥{{ total_price | intcomma }}
+    </div>
+    <button type="button" id="checkout-button" class="cart__purchase btn btn-primary">
+        購入する
+    </button>
+    {% else %}
+    <div class="cart__empty">
+        カートに商品が入っていません。
+    </div>
+    {% endif %}
+</div>
+<script type="text/javascript">
+    // Create an instance of the Stripe object with your publishable API key
+    var stripe = Stripe("{{ publicKey }}");
+    var checkoutButton = document.getElementById("checkout-button");
+ 
+    checkoutButton.addEventListener("click", function () {
+      fetch("/create_checkout_session/", {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+      })
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (session) {
+          return stripe.redirectToCheckout({ sessionId: session.id });
+        })
+        .then(function (result) {
+          // If redirectToCheckout fails due to a browser or network
+          // error, you should display the localized error message to your
+          // customer using error.message.
+          if (result.error) {
+            alert(result.error.message);
+          }
+        })
+        .catch(function (error) {
+          console.error("Error:", error);
+        });
+    });
+  </script>
+{% endblock %}

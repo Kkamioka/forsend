@@ -1,0 +1,8 @@
+user1@18898a21b8ea:~/dev$ pwd
+/home/user1/dev
+user1@18898a21b8ea:~/dev$ ls
+api
+
+
+uvicorn api.main:app --reload --host=0.0.0.0
+
